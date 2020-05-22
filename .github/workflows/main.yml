@@ -24,4 +24,4 @@ jobs:
 
     - name: Test
       run: go test -v .
-    - run: staticcheck
+    #- run: staticcheck
