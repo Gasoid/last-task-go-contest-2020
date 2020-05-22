@@ -1,6 +1,16 @@
 # last-task-go-contest-2020
 ## Репо для проверки последнего задания
 
+- `git clone git@github.com:Gasoid/last-task-go-contest-2020.git`
+- создавайте свою ветку `git checkout -b test-branch-nickname`
+- добавляйте свою функцию в main.go
+- далее как обычно `git commit -am 'blabla' && git push origin test-branch-nickname`
+- создайте Pull request
+- смотрите результаты теста в PR
+
+
+# Задание
+
 Необходимо написать функцию func Merge2Channels(f func(int) int, in1 <-chan int, in2 <- chan int, out chan<- int, n int) в package main. 
 
 ## Описание ее работы: 
