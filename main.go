@@ -15,7 +15,7 @@ func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- 
 			for <-done {
 				for i := nDone; i < n; i++ {
 					if results[i] != nil && results[i+n] != nil {
-						if len(out) > 1 {
+						if cap(out)-len(out) == 0 {
 							break
 						}
 						out <- (*results[i] + *results[i+n])

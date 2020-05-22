@@ -19,7 +19,7 @@ func TestMerge2Channels1(t *testing.T) {
 	}
 	rand.Seed(12000)
 	// repeats := rand.Intn(400)
-	repeats := 1000
+	repeats := 100
 	in1 := make(chan int, repeats)
 	in2 := make(chan int, repeats)
 	out := make(chan int, repeats)
