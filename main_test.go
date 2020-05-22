@@ -25,7 +25,8 @@ func TestMerge2Channels1(t *testing.T) {
 	out := make(chan int, repeats)
 	// log.Println("Seed")
 	log.Println("Merge2Channels")
-	Merge2Channels(f, in1, in2, out, repeats)
+	Merge2Channels(f, in1, in2, out, repeats/2)
+	Merge2Channels(f, in1, in2, out, repeats/2)
 	results := []int{}
 
 	go func() {

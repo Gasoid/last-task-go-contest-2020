@@ -1,8 +1,14 @@
 package main
 
+import (
+	"sync"
+)
+
 func main() {
 
 }
+
+var lock sync.Mutex
 
 func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- int, n int) {
 	go func(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- int) {
@@ -11,15 +17,13 @@ func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- 
 
 		go func() {
 			nDone := 0
-			defer close(out)
+
 			for <-done {
 				for i := nDone; i < n; i++ {
 					if results[i] != nil && results[i+n] != nil {
-						if cap(out)-len(out) == 0 {
-							break
-						}
 						out <- (*results[i] + *results[i+n])
 						if nDone++; nDone == n {
+							lock.Unlock()
 							return
 						}
 					} else {
@@ -38,6 +42,7 @@ func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- 
 				}(i, x)
 			}
 		}
+		lock.Lock()
 		go input(in1, results[:n])
 		go input(in2, results[n:])
 
