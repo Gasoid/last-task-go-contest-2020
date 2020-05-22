@@ -19,7 +19,7 @@ func TestMerge2Channels1(t *testing.T) {
 	}
 	rand.Seed(12000)
 	// repeats := rand.Intn(400)
-	repeats := 100000
+	repeats := 1000
 	in1 := make(chan int, repeats)
 	in2 := make(chan int, repeats)
 	out := make(chan int, repeats)
@@ -54,45 +54,46 @@ func TestMerge2Channels1(t *testing.T) {
 	// log.Println("results =", results)
 }
 
-// func square(n int) int {
-// 	time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
-// 	return n * n
-// }
 
-// func TestMerge2Channels(t *testing.T) {
-// 	rand.Seed(time.Now().UnixNano())
-// 	repeats := 30
-// 	done := make(chan struct{}, 2)
-// 	runTimes := 2
-// 	for i := 0; i < runTimes; i++ {
-// 		go func() {
-// 			in1 := make(chan int, 100)
-// 			in2 := make(chan int, 100)
-// 			out := make(chan int, 100)
+func square(n int) int {
+	time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
+	return n * n
+}
 
-// 			var expectedOut []int
+func TestMerge2Channels2(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	repeats := 30
+	done := make(chan struct{}, 2)
+	runTimes := 2
+	for i := 0; i < runTimes; i++ {
+		go func() {
+			in1 := make(chan int, 100)
+			in2 := make(chan int, 100)
+			out := make(chan int, 100)
 
-// 			for i := 1; i < 101; i++ {
-// 				in1 <- i
-// 				in2 <- i
-// 				expectedOut = append(expectedOut, square(i)*2)
-// 			}
-// 			Merge2Channels(square, in1, in2, out, repeats)
-// 			go func(expectedResult []int, out <-chan int, done chan<- struct{}) {
-// 				for i := 0; i < repeats; i++ {
-// 					v := expectedOut[i]
-// 					r := <-out
-// 					if v != r {
-// 						t.Error("ОЖИДАЛ:", v, "ПОЛУЧИЛ:", r)
-// 					}
-// 				}
-// 				done <- struct{}{}
-// 			}(expectedOut, out, done)
-// 		}()
+			var expectedOut []int
 
-// 	}
-// 	for i := 0; i < runTimes; i++ {
-// 		<-done
-// 	}
+			for i := 1; i < 101; i++ {
+				in1 <- i
+				in2 <- i
+				expectedOut = append(expectedOut, square(i) * 2)
+			}
+			Merge2Channels(square, in1, in2, out, repeats)
+			go func(expectedResult []int, out<- chan int, done chan <- struct{}) {
+				for i := 0; i < repeats; i++ {
+					v := expectedOut[i]
+					r := <- out
+					if v != r {
+						t.Error("ОЖИДАЛ:", v, "ПОЛУЧИЛ:", r)
+					}
+				}
+				done <- struct{}{}
+			}(expectedOut, out, done)
+		}()
 
-// }
+	}
+	for i := 0; i < runTimes; i++ {
+		<- done
+	}
+
+}
