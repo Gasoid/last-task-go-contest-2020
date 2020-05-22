@@ -43,8 +43,8 @@ func TestMerge2Channels1(t *testing.T) {
 		if i != results[c] {
 			t.Errorf("%v != %v", i, results[c])
 		}
-		log.Println("result =", results[c])
-		log.Println("out =", i)
+		//log.Println("result =", results[c])
+		//log.Println("out =", i)
 		c++
 		if c == repeats {
 			close(out)
