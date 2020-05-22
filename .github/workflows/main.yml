@@ -1,0 +1,27 @@
+name: Run test
+
+on: [push]
+# pull_request
+jobs:
+
+  testing:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.14
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get staticcheck
+      run: go get honnef.co/go/tools/cmd/staticcheck
+
+    - name: Test
+      run: go test -v .
+    - run: staticcheck
