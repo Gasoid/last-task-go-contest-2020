@@ -1,7 +1,10 @@
 name: Run test
 
-on: [push]
-# pull_request
+on:
+  push:
+    paths: 
+      - "*.go"
+
 jobs:
 
   testing:
