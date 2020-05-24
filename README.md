@@ -1,4 +1,8 @@
-# last-task-go-contest-2020
+## Telegram группа
+https://t.me/ozon_go_contest2020
+
+## Этот репозиторий никак не связан с ozon
+
 ## Репо для проверки последнего задания
 
 - `git clone git@github.com:Gasoid/last-task-go-contest-2020.git`
