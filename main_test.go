@@ -1,7 +1,7 @@
 package main
 
 import (
-        "fmt"
+	"fmt"
 	"log"
 	"math/rand"
 	"testing"
@@ -54,7 +54,6 @@ func TestMerge2Channels1(t *testing.T) {
 	// log.Println("results =", results)
 }
 
-
 func square(n int) int {
 	time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
 	return n * n
@@ -76,13 +75,13 @@ func TestMerge2Channels2(t *testing.T) {
 			for i := 1; i < 101; i++ {
 				in1 <- i
 				in2 <- i
-				expectedOut = append(expectedOut, square(i) * 2)
+				expectedOut = append(expectedOut, square(i)*2)
 			}
 			Merge2Channels(square, in1, in2, out, repeats)
-			go func(expectedResult []int, out<- chan int, done chan <- struct{}) {
+			go func(expectedResult []int, out <-chan int, done chan<- struct{}) {
 				for i := 0; i < repeats; i++ {
 					v := expectedOut[i]
-					r := <- out
+					r := <-out
 					if v != r {
 						t.Error("ОЖИДАЛ:", v, "ПОЛУЧИЛ:", r)
 					}
@@ -93,11 +92,10 @@ func TestMerge2Channels2(t *testing.T) {
 
 	}
 	for i := 0; i < runTimes; i++ {
-		<- done
+		<-done
 	}
 
 }
-
 
 func fastSquare(a int) int {
 	return a * a
@@ -206,5 +204,42 @@ func TestSlowSquare(t *testing.T) {
 	if len(ch2) != capacity-portion {
 		t.Fail()
 		panic(fmt.Errorf("Second channel has %d numbers in it, should have %d", len(ch2), capacity-portion))
+	}
+}
+
+func TestClosedInputChannels(t *testing.T) {
+	capacity := 100
+	in1 := make(chan int, capacity)
+	in2 := make(chan int, capacity)
+	out := make(chan int, capacity)
+
+	portion := 30
+
+	go func() {
+		for i := 0; i < portion; i++ {
+			i1 := rand.Intn(200)
+			i2 := rand.Intn(200)
+			in1 <- i1
+			in2 <- i2
+		}
+		close(in1)
+		close(in2)
+	}()
+
+	runs := portion * 2
+	Merge2Channels(slowSquare, in1, in2, out, runs)
+
+	count := 0
+	for count < runs {
+		_, ok := <-out
+		if !ok {
+			break
+		} else {
+			count++
+		}
+	}
+	if count != portion {
+		t.Fail()
+		panic(fmt.Errorf("Out channel had %d values instead of expected %d", count, portion))
 	}
 }
