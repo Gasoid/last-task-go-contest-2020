@@ -6,11 +6,8 @@ https://t.me/ozon_go_contest2020
 ## Репо для проверки последнего задания
 
 - `git clone git@github.com:Gasoid/last-task-go-contest-2020.git`
-- создавайте свою ветку `git checkout -b test-branch-nickname`
 - добавляйте свою функцию в main.go
-- далее как обычно `git commit -am 'blabla' && git push origin test-branch-nickname`
-- создайте Pull request
-- смотрите результаты теста в PR
+- запуск теста `go test . -v`
 
 
 # Задание
