@@ -47,13 +47,13 @@ func TestMerge2Channels1(t *testing.T) {
 		//log.Println("out =", i)
 		c++
 		if c == repeats {
-			close(out)
+			// close(out)
+			break
 		}
 	}
 	log.Println("REPEATS=", repeats)
 	// log.Println("results =", results)
 }
-
 
 func square(n int) int {
 	time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
@@ -76,13 +76,13 @@ func TestMerge2Channels2(t *testing.T) {
 			for i := 1; i < 101; i++ {
 				in1 <- i
 				in2 <- i
-				expectedOut = append(expectedOut, square(i) * 2)
+				expectedOut = append(expectedOut, square(i)*2)
 			}
 			Merge2Channels(square, in1, in2, out, repeats)
-			go func(expectedResult []int, out<- chan int, done chan <- struct{}) {
+			go func(expectedResult []int, out <-chan int, done chan<- struct{}) {
 				for i := 0; i < repeats; i++ {
 					v := expectedOut[i]
-					r := <- out
+					r := <-out
 					if v != r {
 						t.Error("ОЖИДАЛ:", v, "ПОЛУЧИЛ:", r)
 					}
@@ -93,7 +93,7 @@ func TestMerge2Channels2(t *testing.T) {
 
 	}
 	for i := 0; i < runTimes; i++ {
-		<- done
+		<-done
 	}
 
 }
